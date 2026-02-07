@@ -197,6 +197,12 @@ func developRunCreate(opts *DevelopOptions, apiClient *api.Client, issueRepo ghr
 		return err
 	}
 
+	// Use branch name from opts in case API-returned one is empty.
+	// This may happen when branch for creating already exists.
+	if branchName == "" {
+		branchName = opts.Name
+	}
+
 	// Remember which branch to target when creating a PR.
 	if opts.BaseBranch != "" {
 		err = opts.GitClient.SetBranchConfig(ctx.Background(), branchName, git.MergeBaseConfig, opts.BaseBranch)
